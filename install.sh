@@ -1,6 +1,6 @@
 #!/bin/bash
 # =========================================================================
-# Instalador Principal Seguro - Golbert VPS V5.0 LTS
+# Instalador Principal Seguro - VPS V5.0 LTS
 # =========================================================================
 
 export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
@@ -42,26 +42,6 @@ if ! apt-get install -y --fix-missing curl wget ca-certificates > /dev/null 2>&1
 fi
 
 clear
-echo -e "${C_CYAN}================================================${C_NC}"
-echo -e "${C_ORANGE}       INGRESE SU KEY DE INSTALACIÓN            ${C_NC}"
-echo -e "${C_CYAN}================================================${C_NC}"
-read -p "🔑 KEY: " USER_KEY
-
-# --- VALIDACIÓN DE KEY ---
-VPS_IP=$(curl -4 -sS --max-time 5 ipv4.icanhazip.com 2>/dev/null || wget -4 -qO- -T 5 ifconfig.me)
-BOT_API="http://45.41.207.172:8888/verify"
-
-echo -e "\n⏳ Validando Key con el Servidor Principal..."
-VALIDATION=$(curl -4 -sS --max-time 8 "$BOT_API?key=$USER_KEY&ip=$VPS_IP" 2>/dev/null)
-
-if echo "$VALIDATION" | grep -q "valid" && ! echo "$VALIDATION" | grep -q "invalid"; then
-    echo -e "${C_GREEN}✅ Key Aceptada. Iniciando instalación...${C_NC}"
-    sleep 2
-else
-    echo -e "${C_RED}❌ KEY INVÁLIDA, EXPIRADA O SIN CONEXIÓN AL SERVIDOR DE LICENCIAS.${C_NC}"
-    echo -e "Adquiere una nueva key contactando a @golbert_service"
-    exit 1
-fi
 
 os_name=$(grep PRETTY_NAME /etc/os-release | cut -d'"' -f2 | awk '{print $1, $2}')
 cpu_info=$(grep "vendor_id" /proc/cpuinfo | head -1 | awk -F': ' '{print $2}')
